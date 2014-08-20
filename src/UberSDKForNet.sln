@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberSDKForNet", "UberSDKForNet\UberSDKForNet.csproj", "{186FBAAF-3D09-4DC0-846B-53030093060B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberSDKForNet.FunctionalTests", "UberSDKForNet.FunctionalTests\UberSDKForNet.FunctionalTests.csproj", "{B5BB0440-DAB6-4F7C-946D-A88913025449}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C86AA856-DB2E-4620-83E3-D08E31082D64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "samples\Web\Web.csproj", "{3026528A-66FA-4D41-B6FC-6C1270FED399}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{186FBAAF-3D09-4DC0-846B-53030093060B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{186FBAAF-3D09-4DC0-846B-53030093060B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{186FBAAF-3D09-4DC0-846B-53030093060B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{186FBAAF-3D09-4DC0-846B-53030093060B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3026528A-66FA-4D41-B6FC-6C1270FED399} = {C86AA856-DB2E-4620-83E3-D08E31082D64}
+	EndGlobalSection
+EndGlobal
