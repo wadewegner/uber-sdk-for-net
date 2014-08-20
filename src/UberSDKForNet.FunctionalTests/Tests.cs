@@ -13,9 +13,10 @@ namespace Uber.FunctionalTests
         [Test]
         public async Task GetToken()
         {
-            var auth = new AuthenticationClient();
+            var uber = new UberClient("8_OWKYgAyaq_cnZgxeEIhk24cSLOYiYRrPMxRZvA");
+            var results = await uber.ProductsAsync(37.7833F, 122.4167F);
 
-
+            Assert.IsNotNull(results);
         }
     }
 }

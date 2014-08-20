@@ -7,24 +7,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Uber.Models;
 
 namespace Uber
 {
     public class ServiceHttpClient
     {
-        private readonly string _url;
+        private readonly string _url = "https://api.uber.com";
         private readonly string _apiVersion;
-        private readonly string _accessToken;
+        private readonly string _token;
         private HttpClient _httpClient;
 
-        public ServiceHttpClient(string url, string apiVersion, string accessToken, HttpClient httpClient)
+        public ServiceHttpClient(TokenTypes tokenType, string apiVersion, string token, HttpClient httpClient)
         {
-            _url = url;
             _apiVersion = apiVersion;
-            _accessToken = accessToken;
+            _token = token;
             _httpClient = httpClient;
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            if (tokenType == TokenTypes.Access)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", _token);
+            }
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
