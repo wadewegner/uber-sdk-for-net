@@ -41,6 +41,8 @@
     <Compile Include="AuthenticationClient.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Models\AuthToken.cs" />
+    <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\Prices.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Models\ResponseTypes.cs" />

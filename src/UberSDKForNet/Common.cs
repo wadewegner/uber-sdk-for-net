@@ -46,6 +46,5 @@ namespace Uber
 
             return string.Format("{0}/{1}/{2}", instanceUrl, apiVersion, resourceName);
         }
-
     }
 }

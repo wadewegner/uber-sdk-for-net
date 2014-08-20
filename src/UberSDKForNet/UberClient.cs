@@ -28,7 +28,12 @@ namespace Uber
 
         public Task<Products> ProductsAsync(float latitude, float longitude)
         {
-            return _serviceHttpClient.HttpGetAsync<Products>(string.Format("products?latitude={0}&longitude={1}", latitude.ToString(), longitude.ToString()));
+            return _serviceHttpClient.HttpGetAsync<Products>(string.Format("products?latitude={0}&longitude={1}", latitude.ToString("R"), longitude.ToString("R")));
+        }
+
+        public Task<Products> PriceEstimateAsync(float startLatitude, float startLongitude, float endLatitude, float endLongitude)
+        {
+            return _serviceHttpClient.HttpGetAsync<Products>(string.Format("estimates/price?start_latitude={0}&start_longitude={1}&end_latitude={2}&end_longitude={3}", startLatitude.ToString("R"), startLongitude.ToString("R"), endLatitude.ToString("R"), endLongitude.ToString("R")));
         }
     }
 }
