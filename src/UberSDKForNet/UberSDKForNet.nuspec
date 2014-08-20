@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>WadeWegner.Uber</id>
+    <version>0.0.1</version>
+    <title>Uber SDK for .NET</title>
+    <authors>wadewegner</authors>
+    <owners>wadewegner</owners>
+    <licenseUrl>https://github.com/wadewegner/uber-sdk-for-net/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/wadewegner/uber-sdk-for-net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A C# .NET SDK for Uber's API</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>uber c# sdk api oauth</tags>
+  </metadata>
+</package>
