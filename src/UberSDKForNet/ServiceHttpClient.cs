@@ -17,14 +17,15 @@ namespace Uber
         private readonly string _apiVersion;
         private readonly string _token;
         private HttpClient _httpClient;
+        public TokenTypes TokenType = TokenTypes.Server;
 
-        public ServiceHttpClient(TokenTypes tokenType, string apiVersion, string token, HttpClient httpClient)
+        public ServiceHttpClient(string apiVersion, string token, HttpClient httpClient)
         {
             _apiVersion = apiVersion;
             _token = token;
             _httpClient = httpClient;
 
-            if (tokenType == TokenTypes.Access)
+            if (TokenType == TokenTypes.Access)
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
             }

@@ -11,18 +11,19 @@ namespace Uber
     public class UberClient
     {
         private ServiceHttpClient _serviceHttpClient;
+        public TokenTypes TokenType = TokenTypes.Server;
 
-        public UberClient(string serverToken)
-            : this(serverToken, "v1", new HttpClient())
+        public UberClient(string token)
+            : this(token, "v1", new HttpClient())
         {
         }
-        public UberClient(string serverToken, string apiVersion)
-            : this(serverToken, apiVersion, new HttpClient())
+        public UberClient(string token, string apiVersion)
+            : this(token, apiVersion, new HttpClient())
         {
         }
-        public UberClient(string serverToken, string apiVersion, HttpClient httpClient)
+        public UberClient(string token, string apiVersion, HttpClient httpClient)
         {
-            _serviceHttpClient = new ServiceHttpClient(TokenTypes.Server, apiVersion, serverToken, httpClient);
+            _serviceHttpClient = new ServiceHttpClient(apiVersion, token, httpClient);
         }
 
         public Task<Products> ProductsAsync(float latitude, float longitude)
