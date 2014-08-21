@@ -19,7 +19,7 @@ namespace UberSDKForNet.UnitTests
         }
 
         [Test]
-        public async Task WebServer_Fail_Arguments()
+        public void WebServer_Fail_Arguments()
         {
             var auth = new AuthenticationClient();
 
