@@ -21,15 +21,29 @@ namespace Uber.FunctionalTests
     [TestFixture]
     public class Tests
     {
-        private readonly string _clientId = ConfigurationSettings.AppSettings["CliendId"];
-        private readonly string _clientSecret = ConfigurationSettings.AppSettings["ClientSecret"];
-        private readonly string _callbackUrl = ConfigurationSettings.AppSettings["CallbackUrl"];
-        private readonly string _username = ConfigurationSettings.AppSettings["Username"];
-        private readonly string _password = ConfigurationSettings.AppSettings["Password"];
-        private readonly string _serverKey = ConfigurationSettings.AppSettings["ServerKey"];
+        private string _clientId = ConfigurationSettings.AppSettings["ClientId"];
+        private string _clientSecret = ConfigurationSettings.AppSettings["ClientSecret"];
+        private string _callbackUrl = ConfigurationSettings.AppSettings["CallbackUrl"];
+        private string _username = ConfigurationSettings.AppSettings["Username"];
+        private string _password = ConfigurationSettings.AppSettings["Password"];
+        private string _serverKey = ConfigurationSettings.AppSettings["ServerKey"];
 
         private float latitude = 37.5F;
         private float longitude = -122.2F;
+
+        [TestFixtureSetUp]
+        public void Init()
+        {
+            if (string.IsNullOrEmpty(_clientId))
+            {
+                _clientId = Environment.GetEnvironmentVariable("ClientId");
+                _clientSecret = Environment.GetEnvironmentVariable("ClientSecret");
+                _callbackUrl = Environment.GetEnvironmentVariable("CallbackUrl");
+                _username = Environment.GetEnvironmentVariable("Username");
+                _password = Environment.GetEnvironmentVariable("Password");
+                _serverKey = Environment.GetEnvironmentVariable("ServerKey");
+            }
+        }
 
         [Test]
         public async Task ResponseHeaders_NotNull()

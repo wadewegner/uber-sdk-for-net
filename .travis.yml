@@ -1,18 +1,25 @@
 language: objective-c
-
 env:
- global:
-  - EnableNuGetPackageRestore=true 
- matrix:
+  global:
+  - EnableNuGetPackageRestore=true
+  - secure: D9/UBVP4tJWTi5MQ1wZdjowUlswmizCQalnWSaJXuFc/7ZkGJuxOXno/Qe3m/nozOUmQw644BG4I5ZAqQjKbXfa7qESVa2ZpBx8PG/1mOtj+jhGEGO/KLbVyQrXGsp255ilnbvtDyPAwHxToM4saXLC6lNSKW5Ud29Wb/8XFZvw=
+  - secure: DLTkfSNoc7q8AcQ2H4WtM1t6bJAj7Q5CdpiB+SuODJs5Wwh9VkJER3fLrjYN4jl+Y6JuNuWnQd+33x14kXiT/rKYMN005fBQ71nBJu2vvYBt5615fOG+ptRo1b+4TZU2kJZxiNyQ0PIBUfDGIGRf59XPSGbmfx3Hn3t8JJkSk08=
+  - secure: GIAzJ567S5AsmfkjfBrLXDtt9WUgF8+JtIXakud6i49Llx7snAZtRbAoRqPQMFEkP+tFF2iFd7Q4OqPTqUdFMJYJh3nAaIWMqbqieS2q2qgNvKXpf5yq0V1yPFCkxQnRS0ps7w8epcnQEkOxGIZeFvQWBYGKPmvqn/sWYCqIINQ=
+  - secure: HyTxjpSCmE0+JFxvV3X+Sx91xQnXO8vIRy6UwIfQVt2zQP+VKTlHrG6TD54Sd55f3RxY50MN73LMUGQYdYSHGJ7Aw3gKw6D8ad8hacT72OovdQnN7ZQhsyCfGzELRP6eOeUCdVlT3UeOPDZDCgPnK/fO+j6ztEq2mh63+sTkb3o=
+  - secure: gduGNj1ZOw8wvoAzkwNqKzyV10f0A1YJQwFGGzgnBp38BVT/CDg+QCNb5olAlh7xgaa/HrgWwK43JV3c2AO3FqE3pH6V7dZVlln2j78XzjTNcyotlNBkR7GKII68ce2sbtAcTPkTcItH1K9SmRb8w3Ux3YIBbQ2gch1OSTPqDwY=
+  - secure: ci2xven5uKI/uJuj5taDbGQkKs4sKoKexMQafcLzlPyjv8mf8bsTnldAhlk+VEYOyv0fRjnouPX4j2jO8+Q13eHqv6WBPcvXhUlByg+i3u9noRkuwH6Mb+W/5yc4Chej0/6ncuugTshIN7pirjhuMUTR2gP8/istnnlRIYUfq4w=
+  matrix:
   - MONO_VERSION="3.4.0"
-
 before_install:
- - wget "http://download.mono-project.com/archive/${MONO_VERSION}/macos-10-x86/MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg"
- - sudo installer -pkg "MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg" -target /
- 
+- wget "http://download.mono-project.com/archive/${MONO_VERSION}/macos-10-x86/MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg"
+- sudo installer -pkg "MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg"
+  -target /
 script:
-  - mono --runtime=v4.0 tools/NuGet.exe restore src/UberSDKForNet.sln -ConfigFile tools/NuGet.Config -Source nuget -Verbosity detailed -NoCache -DisableParallelProcessing
-  - xbuild src/UberSDKForNet.sln
-  - mono --runtime=v4.0 tools/NuGet.exe install NUnit.Runners -Version 2.6.3 -o packages
-  - mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml -nodots -labels -stoponerror src/UberSDKForNet.FunctionalTests/bin/Debug/Uber.FunctionalTests.dll
-  - mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml -nodots -labels -stoponerror src/UberSDKForNet.UnitTests/bin/Debug/Uber.UnitTests.dll
+- mono --runtime=v4.0 tools/NuGet.exe restore src/UberSDKForNet.sln -ConfigFile tools/NuGet.Config
+  -Source nuget -Verbosity detailed -NoCache -DisableParallelProcessing
+- xbuild src/UberSDKForNet.sln
+- mono --runtime=v4.0 tools/NuGet.exe install NUnit.Runners -Version 2.6.3 -o packages
+- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml
+  -nodots -labels -stoponerror src/UberSDKForNet.FunctionalTests/bin/Debug/Uber.FunctionalTests.dll
+- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml
+  -nodots -labels -stoponerror src/UberSDKForNet.UnitTests/bin/Debug/Uber.UnitTests.dll
