@@ -1,4 +1,4 @@
-# Uber SDK for .NET
+# Uber SDK for .NET [![Build Status](https://travis-ci.org/wadewegner/uber-sdk-for-net.svg?branch=master)](https://travis-ci.org/wadewegner/uber-sdk-for-net)
 
 This SDK provides an easy way for .NET developers to build C# or VB applications that interact with the [Uber API](https://developer.uber.com/).
 
