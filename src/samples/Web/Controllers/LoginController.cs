@@ -37,7 +37,7 @@ namespace Web.Controllers
             Session["AccessToken"] = auth.AccessToken;
             Session["RefreshToken"] = auth.RefreshToken;
 
-            var client = new UberClient(TokenTypes.Access, auth.AccessToken, auth.ApiVersion, new HttpClient());
+            var client = new UberClient(TokenTypes.Access, auth.AccessToken);
 
             var userActivity = await client.UserActivityAsync();
             var user = await client.UserAsync();

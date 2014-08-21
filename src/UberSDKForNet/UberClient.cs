@@ -22,6 +22,11 @@ namespace Uber
         {
         }
 
+        public UberClient(TokenTypes tokenType, string token)
+            : this(tokenType, token, "v1", new HttpClient())
+        {
+        }
+
         public UberClient(string token, string apiVersion)
             : this(TokenTypes.Server, token, apiVersion, new HttpClient())
         {
