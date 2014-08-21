@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Uber;
 
-namespace UberSDKForNet.UnitTests
+namespace Uber.UnitTests
 {
     [TestFixture]
     public class Tests
