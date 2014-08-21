@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Uber.Models;
@@ -15,9 +13,9 @@ namespace Uber
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
 
-        private string _tokenUrl = "https://login.uber.com/oauth/token";
+        private const string TokenUrl = "https://login.uber.com/oauth/token";
         private string _apiVersion = "v1";
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public AuthenticationClient()
             : this(new HttpClient())
@@ -37,8 +35,8 @@ namespace Uber
             if (string.IsNullOrEmpty(clientId)) throw new ArgumentNullException("clientId");
             if (string.IsNullOrEmpty(clientSecret)) throw new ArgumentNullException("clientSecret");
             if (string.IsNullOrEmpty(redirectUri)) throw new ArgumentNullException("redirectUri");
-            //TODO: check to make sure redirectUri is a valid URI
             if (string.IsNullOrEmpty(code)) throw new ArgumentNullException("code");
+            if (!Common.IsValidUri(redirectUri)) throw new ArgumentException("Invalid redirectUri");
 
             var content = new FormUrlEncodedContent(new[]
                 {
@@ -52,7 +50,7 @@ namespace Uber
             var request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri(_tokenUrl),
+                RequestUri = new Uri(TokenUrl),
                 Content = content
             };
 

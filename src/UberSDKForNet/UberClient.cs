@@ -85,6 +85,16 @@ namespace Uber
             return await HttpGetAsync<Times>(url);
         }
 
+        public async Task<UserActivity> UserActivityAsync(int offset = 0, int limit = 5)
+        {
+            if (_tokenType == TokenTypes.Server) throw new ArgumentException("Wrong token type! Use access token instead of server token.");
+
+            var urlSuffix = string.Format("history?offset={0}&limit={1}", offset, limit);
+            var url = Common.FormatUrl(_url, _apiVersion, urlSuffix);
+
+            return await HttpGetAsync<UserActivity>(url);
+        }
+
         private async Task<T> HttpGetAsync<T>(string url)
         {
             var request = new HttpRequestMessage()
@@ -112,6 +122,5 @@ namespace Uber
             throw new Exception("error");
         }
 
-  
     }
 }

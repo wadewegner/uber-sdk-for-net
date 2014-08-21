@@ -41,15 +41,18 @@
     <Compile Include="AuthenticationClient.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Models\AuthToken.cs" />
+    <Compile Include="Models\History.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Prices.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Models\ResponseHeader.cs" />
     <Compile Include="Models\ResponseTypes.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Time.cs" />
     <Compile Include="Models\Times.cs" />
     <Compile Include="Models\TokenTypes.cs" />
+    <Compile Include="Models\UserActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UberClient.cs" />
   </ItemGroup>

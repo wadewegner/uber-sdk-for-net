@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,14 +22,7 @@ namespace Uber.FunctionalTests
         }
 
         [Test]
-        public async Task Request()
-        {
-            var results = await _uberClient.ProductsAsync(latitude, longitude);
-            Assert.IsNotNull(results);
-        }
-
-        [Test]
-        public async Task Products()
+        public async Task ResponseHeaders_NotNull()
         {
             await _uberClient.ProductsAsync(latitude, longitude);
 
@@ -37,6 +31,13 @@ namespace Uber.FunctionalTests
             Assert.IsNotNull(_uberClient.RateLimitReset);
             Assert.IsNotNull(_uberClient.RateLimitLimit);
             Assert.IsNotNull(_uberClient.UberApp);
+        }
+
+        [Test]
+        public async Task Products()
+        {
+            var results = await _uberClient.ProductsAsync(latitude, longitude);
+            Assert.IsNotNull(results);
         }
 
         [Test]
@@ -66,6 +67,24 @@ namespace Uber.FunctionalTests
             }
         }
 
+        [Test]
+        public void UserActivity_Fail_ServerToken()
+        {
+            Assert.That(async () => await _uberClient.UserActivityAsync(), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public async Task WebServer()
+        {
+            var auth = new AuthenticationClient();
+
+            Assert.That(async () => await auth.WebServerAsync("", "", "", ""), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(async () => await auth.WebServerAsync("clientid", "", "", ""), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "", ""), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "redirectUri", ""), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "redirectUri", "code"), Throws.InstanceOf<ArgumentException>());
+
+        }
 
     }
 }

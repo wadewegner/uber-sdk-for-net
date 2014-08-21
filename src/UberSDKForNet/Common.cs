@@ -46,5 +46,11 @@ namespace Uber
 
             return string.Format("{0}/{1}/{2}", instanceUrl, apiVersion, resourceName);
         }
+
+        public static bool IsValidUri(string url)
+        {
+            Uri tempValue;
+            return Uri.TryCreate(url, UriKind.Absolute, out tempValue);
+        }
     }
 }
