@@ -7,8 +7,8 @@
     <ProjectGuid>{10C2800A-97F0-465B-A75E-3855AA9481E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UberSDKForNet.UnitTests</RootNamespace>
-    <AssemblyName>UberSDKForNet.UnitTests</AssemblyName>
+    <RootNamespace>Uber.UnitTests</RootNamespace>
+    <AssemblyName>Uber.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
