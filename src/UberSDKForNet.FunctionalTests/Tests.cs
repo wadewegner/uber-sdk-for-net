@@ -67,24 +67,7 @@ namespace Uber.FunctionalTests
             }
         }
 
-        [Test]
-        public void UserActivity_Fail_ServerToken()
-        {
-            Assert.That(async () => await _uberClient.UserActivityAsync(), Throws.InstanceOf<ArgumentException>());
-        }
 
-        [Test]
-        public async Task WebServer()
-        {
-            var auth = new AuthenticationClient();
-
-            Assert.That(async () => await auth.WebServerAsync("", "", "", ""), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(async () => await auth.WebServerAsync("clientid", "", "", ""), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "", ""), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "redirectUri", ""), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(async () => await auth.WebServerAsync("clientid", "clientSecret", "redirectUri", "code"), Throws.InstanceOf<ArgumentException>());
-
-        }
 
     }
 }
