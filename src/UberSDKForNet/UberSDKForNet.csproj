@@ -45,6 +45,7 @@
     <Compile Include="Models\Prices.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Products.cs" />
+    <Compile Include="Models\ResponseHeader.cs" />
     <Compile Include="Models\ResponseTypes.cs" />
     <Compile Include="Models\Time.cs" />
     <Compile Include="Models\Times.cs" />

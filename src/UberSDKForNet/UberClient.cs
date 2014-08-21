@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using Uber.Models;
 
 namespace Uber
 {
-    public class UberClient
+    public class UberClient : ResponseHeader
     {
         private readonly string _url = "https://api.uber.com";
         private readonly string _apiVersion;
@@ -94,6 +95,12 @@ namespace Uber
 
             var responseMessage = await _httpClient.SendAsync(request).ConfigureAwait(false);
             var response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            RateLimitRemaining = responseMessage.Headers.GetValues("X-Rate-Limit-Remaining").FirstOrDefault();
+            Etag = responseMessage.Headers.GetValues("Etag").FirstOrDefault();
+            RateLimitReset = responseMessage.Headers.GetValues("X-Rate-Limit-Reset").FirstOrDefault();
+            RateLimitLimit = responseMessage.Headers.GetValues("X-Rate-Limit-Limit").FirstOrDefault();
+            UberApp = responseMessage.Headers.GetValues("X-Uber-App").FirstOrDefault();
 
             if (responseMessage.IsSuccessStatusCode)
             {

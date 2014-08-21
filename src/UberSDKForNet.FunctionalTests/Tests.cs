@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Uber.Models;
 
 namespace Uber.FunctionalTests
 {
@@ -8,6 +11,8 @@ namespace Uber.FunctionalTests
     public class Tests
     {
         private UberClient _uberClient;
+        private float latitude = 37.5F;
+        private float longitude = -122.2F;
 
         [TestFixtureSetUp]
         public void Init()
@@ -16,38 +21,47 @@ namespace Uber.FunctionalTests
         }
 
         [Test]
+        public async Task Request()
+        {
+            var results = await _uberClient.ProductsAsync(latitude, longitude);
+            Assert.IsNotNull(results);
+        }
+
+        [Test]
         public async Task Products()
         {
-            var results = await _uberClient.ProductsAsync(37.7833F, -122.419416F); // San Francisco
+            await _uberClient.ProductsAsync(latitude, longitude);
 
-            Assert.IsNotNull(results);
+            Assert.IsNotNull(_uberClient.RateLimitRemaining);
+            Assert.IsNotNull(_uberClient.Etag);
+            Assert.IsNotNull(_uberClient.RateLimitReset);
+            Assert.IsNotNull(_uberClient.RateLimitLimit);
+            Assert.IsNotNull(_uberClient.UberApp);
         }
 
         [Test]
         public async Task PriceEstimates()
         {
-            var results = await _uberClient.PriceEstimateAsync(37.5F, -122.2F, 37.8F, -122.5F); // San Francisco
-
+            var results = await _uberClient.PriceEstimateAsync(latitude, longitude, latitude + 0.3F, longitude - 0.3F);
             Assert.IsNotNull(results);
         }
 
         [Test]
         public async Task TimeEstimates()
         {
-            var results = await _uberClient.TimeEstimateAsync(37.5F, -122.2F); // San Francisco
-
+            var results = await _uberClient.TimeEstimateAsync(latitude, longitude);
             Assert.IsNotNull(results);
         }
 
         [Test]
         public async Task TimeEstimates_Product()
         {
-            var productResults = await _uberClient.ProductsAsync(37.7833F, -122.419416F); // San Francisco
+            var productResults = await _uberClient.ProductsAsync(latitude, longitude);
             var product = productResults.products.FirstOrDefault();
+
             if (product != null)
             {
-                var results = await _uberClient.TimeEstimateAsync(37.5F, -122.2F, productId: product.product_id); // San Francisco
-
+                var results = await _uberClient.TimeEstimateAsync(latitude, longitude, productId: product.product_id);
                 Assert.IsNotNull(results);
             }
         }
