@@ -95,6 +95,15 @@ namespace Uber
             return await HttpGetAsync<UserActivity>(url);
         }
 
+        public async Task<User> UserAsync()
+        {
+            if (_tokenType == TokenTypes.Server) throw new ArgumentException("Wrong token type! Use access token instead of server token.");
+
+            var url = Common.FormatUrl(_url, _apiVersion, "me");
+
+            return await HttpGetAsync<User>(url);
+        }
+
         private async Task<T> HttpGetAsync<T>(string url)
         {
             var request = new HttpRequestMessage()
@@ -106,14 +115,14 @@ namespace Uber
             var responseMessage = await _httpClient.SendAsync(request).ConfigureAwait(false);
             var response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            RateLimitRemaining = responseMessage.Headers.GetValues("X-Rate-Limit-Remaining").FirstOrDefault();
-            Etag = responseMessage.Headers.GetValues("Etag").FirstOrDefault();
-            RateLimitReset = responseMessage.Headers.GetValues("X-Rate-Limit-Reset").FirstOrDefault();
-            RateLimitLimit = responseMessage.Headers.GetValues("X-Rate-Limit-Limit").FirstOrDefault();
-            UberApp = responseMessage.Headers.GetValues("X-Uber-App").FirstOrDefault();
-
             if (responseMessage.IsSuccessStatusCode)
             {
+                RateLimitRemaining = responseMessage.Headers.GetValues("X-Rate-Limit-Remaining").FirstOrDefault();
+                Etag = responseMessage.Headers.GetValues("Etag").FirstOrDefault();
+                RateLimitReset = responseMessage.Headers.GetValues("X-Rate-Limit-Reset").FirstOrDefault();
+                RateLimitLimit = responseMessage.Headers.GetValues("X-Rate-Limit-Limit").FirstOrDefault();
+                UberApp = responseMessage.Headers.GetValues("X-Uber-App").FirstOrDefault();
+
                 var jObject = JObject.Parse(response);
                 var r = JsonConvert.DeserializeObject<T>(jObject.ToString());
                 return r;

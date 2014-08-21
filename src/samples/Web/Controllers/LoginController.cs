@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -35,6 +36,11 @@ namespace Web.Controllers
             Session["ApiVersion"] = auth.ApiVersion;
             Session["AccessToken"] = auth.AccessToken;
             Session["RefreshToken"] = auth.RefreshToken;
+
+            var client = new UberClient(TokenTypes.Access, auth.AccessToken, auth.ApiVersion, new HttpClient());
+
+            var userActivity = await client.UserActivityAsync();
+            var user = await client.UserAsync();
 
             return RedirectToAction("Index", "Home");
         }

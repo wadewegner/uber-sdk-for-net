@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="AuthenticationClient.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\AuthToken.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Price.cs" />
