@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberSDKForNet", "UberSDKFor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberSDKForNet.FunctionalTests", "UberSDKForNet.FunctionalTests\UberSDKForNet.FunctionalTests.csproj", "{B5BB0440-DAB6-4F7C-946D-A88913025449}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C86AA856-DB2E-4620-83E3-D08E31082D64}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "samples\Web\Web.csproj", "{3026528A-66FA-4D41-B6FC-6C1270FED399}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberSDKForNet.UnitTests", "UberSDKForNet.UnitTests\UberSDKForNet.UnitTests.csproj", "{10C2800A-97F0-465B-A75E-3855AA9481E1}"
 EndProject
 Global
@@ -27,10 +23,6 @@ Global
 		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5BB0440-DAB6-4F7C-946D-A88913025449}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3026528A-66FA-4D41-B6FC-6C1270FED399}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10C2800A-97F0-465B-A75E-3855AA9481E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10C2800A-97F0-465B-A75E-3855AA9481E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10C2800A-97F0-465B-A75E-3855AA9481E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,8 +30,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3026528A-66FA-4D41-B6FC-6C1270FED399} = {C86AA856-DB2E-4620-83E3-D08E31082D64}
 	EndGlobalSection
 EndGlobal
