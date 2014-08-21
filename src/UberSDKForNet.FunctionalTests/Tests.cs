@@ -11,63 +11,59 @@ namespace Uber.FunctionalTests
     [TestFixture]
     public class Tests
     {
-        private UberClient _uberClient;
         private float latitude = 37.5F;
         private float longitude = -122.2F;
-
-        [TestFixtureSetUp]
-        public void Init()
-        {
-            _uberClient = new UberClient("8_OWKYgAyaq_cnZgxeEIhk24cSLOYiYRrPMxRZvA");
-        }
+        private string serverKey = "8_OWKYgAyaq_cnZgxeEIhk24cSLOYiYRrPMxRZvA";
 
         [Test]
         public async Task ResponseHeaders_NotNull()
         {
-            await _uberClient.ProductsAsync(latitude, longitude);
+            var client = new UberClient(serverKey);
+            await client.ProductsAsync(latitude, longitude);
 
-            Assert.IsNotNull(_uberClient.RateLimitRemaining);
-            Assert.IsNotNull(_uberClient.Etag);
-            Assert.IsNotNull(_uberClient.RateLimitReset);
-            Assert.IsNotNull(_uberClient.RateLimitLimit);
-            Assert.IsNotNull(_uberClient.UberApp);
+            Assert.IsNotNull(client.RateLimitRemaining);
+            Assert.IsNotNull(client.Etag);
+            Assert.IsNotNull(client.RateLimitReset);
+            Assert.IsNotNull(client.RateLimitLimit);
+            Assert.IsNotNull(client.UberApp);
         }
 
         [Test]
         public async Task Products()
         {
-            var results = await _uberClient.ProductsAsync(latitude, longitude);
+            var client = new UberClient(serverKey);
+            var results = await client.ProductsAsync(latitude, longitude);
             Assert.IsNotNull(results);
         }
 
         [Test]
         public async Task PriceEstimates()
         {
-            var results = await _uberClient.PriceEstimateAsync(latitude, longitude, latitude + 0.3F, longitude - 0.3F);
+            var client = new UberClient(serverKey);
+            var results = await client.PriceEstimateAsync(latitude, longitude, latitude + 0.3F, longitude - 0.3F);
             Assert.IsNotNull(results);
         }
 
         [Test]
         public async Task TimeEstimates()
         {
-            var results = await _uberClient.TimeEstimateAsync(latitude, longitude);
+            var client = new UberClient(serverKey);
+            var results = await client.TimeEstimateAsync(latitude, longitude);
             Assert.IsNotNull(results);
         }
 
         [Test]
         public async Task TimeEstimates_Product()
         {
-            var productResults = await _uberClient.ProductsAsync(latitude, longitude);
+            var client = new UberClient(serverKey);
+            var productResults = await client.ProductsAsync(latitude, longitude);
             var product = productResults.products.FirstOrDefault();
 
             if (product != null)
             {
-                var results = await _uberClient.TimeEstimateAsync(latitude, longitude, productId: product.product_id);
+                var results = await client.TimeEstimateAsync(latitude, longitude, productId: product.product_id);
                 Assert.IsNotNull(results);
             }
         }
-
-
-
     }
 }

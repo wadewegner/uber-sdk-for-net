@@ -11,18 +11,11 @@ namespace UberSDKForNet.UnitTests
     [TestFixture]
     public class Tests
     {
-        private UberClient _uberClient;
-
-        [TestFixtureSetUp]
-        public void Init()
-        {
-            _uberClient = new UberClient("");
-        }
-
         [Test]
         public void UserActivity_Fail_ServerToken()
         {
-            Assert.That(async () => await _uberClient.UserActivityAsync(), Throws.InstanceOf<ArgumentException>());
+            var client = new UberClient("");
+            Assert.That(async () => await client.UserActivityAsync(), Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
