@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WadeWegner.Uber</id>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <title>Uber SDK for .NET</title>
     <authors>wadewegner</authors>
     <owners>wadewegner</owners>
