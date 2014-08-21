@@ -12,7 +12,7 @@ You can try the SDK immmediately by installing the [WadeWegner.Uber](https://www
   
 ## Sample
 
-You can try an ASP.NET MVC sample that demonstrates the OAuth 2.0 flow for acquiring a user access token. You can find this sample here: [https://github.com/wadewegner/uber-sdk-for-net/tree/master/src/samples/Web](https://github.com/wadewegner/uber-sdk-for-net/tree/master/src/samples/Web).
+You can try an ASP.NET MVC sample that demonstrates the OAuth 2.0 flow for acquiring a user access token. You can find this sample here: [https://github.com/wadewegner/uber-sdk-for-net/tree/master/samples/Web](https://github.com/wadewegner/uber-sdk-for-net/tree/master/samples/Web).
 
 ## Operations
 
