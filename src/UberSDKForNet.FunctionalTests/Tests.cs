@@ -96,6 +96,7 @@ namespace Uber.FunctionalTests
             }
         }
 
+        [Test]
         public async Task Authentication_UserToken()
         {
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
