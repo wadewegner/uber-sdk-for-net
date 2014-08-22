@@ -100,7 +100,7 @@ namespace Uber.FunctionalTests
         [Test]
         public async Task Authentication_UserToken()
         {
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
+            //ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
 
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
             var webClient = new WebClient(BrowserVersion.CHROME);
