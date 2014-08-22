@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using com.gargoylesoftware.htmlunit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NHtmlUnit.Html;
 using NUnit.Framework;
 using Uber.Models;
@@ -15,6 +17,7 @@ using Uber.Models;
 using NHtmlUnit;
 using NHtmlUnit.Html;
 using BrowserVersion = NHtmlUnit.BrowserVersion;
+using HttpMethod = System.Net.Http.HttpMethod;
 using WebClient = NHtmlUnit.WebClient;
 
 namespace Uber.FunctionalTests
@@ -97,53 +100,34 @@ namespace Uber.FunctionalTests
             }
         }
 
+        [Test]
         public async Task Authentication_UserToken()
         {
-            var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
-            var webClient = new WebClient(BrowserVersion.CHROME);
+            const string url = "http://oauthintsvc.cloudapp.net/api/oauth";
 
-            webClient.Options.ThrowExceptionOnFailingStatusCode = false;
-            webClient.Options.ThrowExceptionOnScriptError = false;
-            webClient.Options.JavaScriptEnabled = true;
-            webClient.Options.RedirectEnabled = true;
-            webClient.WaitForBackgroundJavaScript(2000);
+            using (var httpClient = new HttpClient())
+            {
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(url),
+                    Method = HttpMethod.Get
+                };
 
-            var page = webClient.GetHtmlPage(url);
-            Assert.IsNotNull(page);
+                var responseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
+                var response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var emailInputElement = (HtmlTextInput)page.GetElementByName("email");
-            emailInputElement.Type(_username);
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var jObject = JObject.Parse(response);
+                    var auth = JsonConvert.DeserializeObject<AuthToken>(jObject.ToString());
 
-            var passwordInputElement = (HtmlPasswordInput)page.GetElementByName("password");
-            passwordInputElement.Type(_password);
+                    var accessToken = auth.access_token;
+                    var refreshToken = auth.refresh_token;
 
-            var submitPage1Button = (HtmlSubmitInput)page.GetElementsByTagName("input")[4];
-            Assert.IsNotNull(submitPage1Button);
-
-            var page2 = (HtmlPage)submitPage1Button.Click();
-            Assert.IsNotNull(page2);
-
-            var submitPage2Button = (HtmlSubmitInput)page2.GetElementsByTagName("input")[3];
-            Assert.IsNotNull(submitPage2Button);
-
-            var page3 = submitPage2Button.Click();
-            var page3Url = page3.Url.toString();
-            Assert.IsNotNull(page3Url);
-
-            var queryCollection = HttpUtility.ParseQueryString(page3Url);
-            var code = queryCollection[0];
-            Assert.IsNotNull(code);
-
-            var auth = new AuthenticationClient();
-            await auth.WebServerAsync(_clientId, _clientSecret, _callbackUrl, code);
-
-            var apiVersion = auth.ApiVersion;
-            var accessToken = auth.AccessToken;
-            var refreshToken = auth.RefreshToken;
-
-            Assert.IsNotNull(apiVersion);
-            Assert.IsNotNull(accessToken);
-            Assert.IsNotNull(refreshToken);
+                    Assert.IsNotNull(accessToken);
+                    Assert.IsNotNull(refreshToken);
+                }
+            }
         }
     }
 }
