@@ -100,15 +100,16 @@ namespace Uber.FunctionalTests
         [Test]
         public async Task Authentication_UserToken()
         {
-            System.Net.ServicePointManager.CertificatePolicy = new DefaultCertificatePolicy();
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
 
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
-            var webClient = new WebClient(BrowserVersion.CHROME);
+            var webClient = new WebClient(BrowserVersion.FIREFOX_17);
 
             webClient.Options.ThrowExceptionOnFailingStatusCode = false;
             webClient.Options.ThrowExceptionOnScriptError = false;
             webClient.Options.JavaScriptEnabled = true;
             webClient.Options.RedirectEnabled = true;
+            webClient.Options.UseInsecureSsl = true;
             webClient.WaitForBackgroundJavaScript(2000);
 
             var page = webClient.GetHtmlPage(url);
@@ -147,15 +148,6 @@ namespace Uber.FunctionalTests
             Assert.IsNotNull(apiVersion);
             Assert.IsNotNull(accessToken);
             Assert.IsNotNull(refreshToken);
-        }
-    }
-
-    public class DefaultCertificatePolicy : ICertificatePolicy
-    {
-        public bool CheckValidationResult(ServicePoint srvPoint, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Net.WebRequest request, int certificateProblem)
-        {
-            // implements your logic
-            return true;
         }
     }
 }
