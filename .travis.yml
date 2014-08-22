@@ -15,11 +15,8 @@ before_install:
 - sudo installer -pkg "MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg"
   -target /
 script:
-- mono --runtime=v4.0 tools/NuGet.exe restore src/UberSDKForNet.sln -ConfigFile tools/NuGet.Config
-  -Source nuget -Verbosity detailed -NoCache -DisableParallelProcessing
+- mono --runtime=v4.0 tools/NuGet.exe restore src/UberSDKForNet.sln -ConfigFile tools/NuGet.Config -Source nuget -Verbosity detailed -NoCache -DisableParallelProcessing
 - xbuild src/UberSDKForNet.sln
 - mono --runtime=v4.0 tools/NuGet.exe install NUnit.Runners -Version 2.6.3 -o packages
-- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml
-  -nodots -labels src/UberSDKForNet.FunctionalTests/bin/Debug/Uber.FunctionalTests.dll
-- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml
-  -nodots -labels src/UberSDKForNet.UnitTests/bin/Debug/Uber.UnitTests.dll
+- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml -nodots -labels src/UberSDKForNet.FunctionalTests/bin/Debug/Uber.FunctionalTests.dll
+- mono --runtime=v4.0 packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml -nodots -labels src/UberSDKForNet.UnitTests/bin/Debug/Uber.UnitTests.dll

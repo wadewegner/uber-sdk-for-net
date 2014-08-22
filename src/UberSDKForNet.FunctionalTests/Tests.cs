@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,6 +100,8 @@ namespace Uber.FunctionalTests
         [Test]
         public async Task Authentication_UserToken()
         {
+            System.Net.ServicePointManager.CertificatePolicy = new DefaultCertificatePolicy();
+
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
             var webClient = new WebClient(BrowserVersion.CHROME);
 
@@ -144,6 +147,15 @@ namespace Uber.FunctionalTests
             Assert.IsNotNull(apiVersion);
             Assert.IsNotNull(accessToken);
             Assert.IsNotNull(refreshToken);
+        }
+    }
+
+    public class DefaultCertificatePolicy : ICertificatePolicy
+    {
+        public bool CheckValidationResult(ServicePoint srvPoint, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Net.WebRequest request, int certificateProblem)
+        {
+            // implements your logic
+            return true;
         }
     }
 }
