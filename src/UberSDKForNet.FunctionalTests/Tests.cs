@@ -109,7 +109,6 @@ namespace Uber.FunctionalTests
             webClient.Options.ThrowExceptionOnScriptError = false;
             webClient.Options.JavaScriptEnabled = true;
             webClient.Options.RedirectEnabled = true;
-            webClient.Options.UseInsecureSsl = true;
             webClient.WaitForBackgroundJavaScript(2000);
 
             var page = webClient.GetHtmlPage(url);
