@@ -103,7 +103,7 @@ namespace Uber.FunctionalTests
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
 
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
-            var webClient = new WebClient(BrowserVersion.FIREFOX_17);
+            var webClient = new WebClient(BrowserVersion.CHROME);
 
             webClient.Options.ThrowExceptionOnFailingStatusCode = false;
             webClient.Options.ThrowExceptionOnScriptError = false;
