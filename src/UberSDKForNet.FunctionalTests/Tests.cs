@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using com.gargoylesoftware.htmlunit;
+using ikvm.extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHtmlUnit.Html;
@@ -128,6 +130,38 @@ namespace Uber.FunctionalTests
                     Assert.IsNotNull(refreshToken);
                 }
             }
+        }
+
+        [Test]
+        public void Testing()
+        {
+            const string arguments = "test.js";
+            const string expected = "test";
+
+            var p = new Process
+            {
+                StartInfo =
+                {
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = false,
+                    FileName = @"phantomjs.exe",
+                    Arguments = arguments
+                }
+            };
+
+            p.Start();
+            var error = p.StandardError.ReadToEnd();
+
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            var actual = p.StandardOutput.ReadToEnd().Trim();
+
+            Assert.AreEqual(expected, actual);
+
+            p.WaitForExit();
         }
     }
 }
