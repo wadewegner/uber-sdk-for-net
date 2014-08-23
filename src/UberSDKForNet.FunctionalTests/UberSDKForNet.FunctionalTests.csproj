@@ -153,8 +153,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="phantomjs.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\packages\PhantomJS.1.9.7\tools\phantomjs\phantomjs.exe">
+      <Link>phantomjs.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="phantomjs-license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
