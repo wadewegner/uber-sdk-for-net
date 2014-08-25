@@ -132,36 +132,36 @@ namespace Uber.FunctionalTests
             }
         }
 
-        [Test]
-        public void Testing()
-        {
-            const string arguments = "test.js";
-            const string expected = "test";
+        //[Test]
+        //public void Testing()
+        //{
+        //    const string arguments = "test.js";
+        //    const string expected = "test";
 
-            var p = new Process
-            {
-                StartInfo =
-                {
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = false,
-                    FileName = @"phantomjs.exe",
-                    Arguments = arguments
-                }
-            };
+        //    var p = new Process
+        //    {
+        //        StartInfo =
+        //        {
+        //            RedirectStandardError = true,
+        //            UseShellExecute = false,
+        //            RedirectStandardOutput = true,
+        //            CreateNoWindow = false,
+        //            FileName = @"phantomjs.exe",
+        //            Arguments = arguments
+        //        }
+        //    };
 
-            p.Start();
-            var error = p.StandardError.ReadToEnd();
+        //    p.Start();
+        //    var error = p.StandardError.ReadToEnd();
 
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
+        //    if (!string.IsNullOrEmpty(error))
+        //        throw new Exception(error);
 
-            var actual = p.StandardOutput.ReadToEnd().Trim();
+        //    var actual = p.StandardOutput.ReadToEnd().Trim();
 
-            Assert.AreEqual(expected, actual);
+        //    Assert.AreEqual(expected, actual);
 
-            p.WaitForExit();
-        }
+        //    p.WaitForExit();
+        //}
     }
 }
