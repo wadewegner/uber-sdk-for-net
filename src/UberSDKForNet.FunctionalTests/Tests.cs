@@ -27,12 +27,10 @@ namespace Uber.FunctionalTests
         private string _password = ConfigurationSettings.AppSettings["Password"];
         private string _serverKey = ConfigurationSettings.AppSettings["ServerKey"];
 
-        private WebClient _webClient;
-
         private float latitude = 37.5F;
         private float longitude = -122.2F;
 
-        [SetUp]
+        [TestFixtureSetUp]
         public void Init()
         {
             if (string.IsNullOrEmpty(_clientId))
@@ -43,8 +41,6 @@ namespace Uber.FunctionalTests
                 _userName = Environment.GetEnvironmentVariable("Username");
                 _password = Environment.GetEnvironmentVariable("Password");
                 _serverKey = Environment.GetEnvironmentVariable("ServerKey");
-
-
             }
         }
 
@@ -101,82 +97,83 @@ namespace Uber.FunctionalTests
 
 
         [Test]
-        public void Asdf()
+        public void CheckWebAuthFlow()
         {
             var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
             var expectedUrl = string.Format("https://login.uber.com/oauth/authorize?response_type=code&client_id={0}&redirect_uri={1}", _clientId, HttpUtility.UrlEncode(_callbackUrl));
 
             Assert.AreEqual(url, expectedUrl);
 
-            try
+            var webClient = new WebClient(BrowserVersion.FIREFOX_17);
+
+            webClient.Options.ThrowExceptionOnScriptError = false;
+
+            webClient.Options.JavaScriptEnabled = true;
+            webClient.Options.RedirectEnabled = true;
+            webClient.Options.ActiveXNative = false;
+            webClient.Options.CssEnabled = true; 
+
+            // ########################################
+            // # Uber login page
+            // ########################################
+
+            var loginPage = webClient.GetHtmlPage(url);
+            Assert.IsNotNull(loginPage);
+
+            var loginPageText = loginPage.AsText();
+
+            StringAssert.Contains("sign in", loginPageText.toLowerCase());
+            StringAssert.Contains("connect with facebook", loginPageText.toLowerCase());
+            StringAssert.Contains("don't have an account", loginPageText.toLowerCase());
+            StringAssert.Contains("email", loginPageText.toLowerCase());
+            StringAssert.Contains("password", loginPageText.toLowerCase());
+
+            var signInSpan = (HtmlSpan)loginPage.GetElementsByTagName("span")[0];
+            Assert.AreEqual(signInSpan.AsText(), "Sign In");
+
+            var emailInputElement = (HtmlTextInput)loginPage.GetElementByName("email");
+            Assert.IsNotNull(emailInputElement, "email");
+
+            emailInputElement.SetValueAttribute(_userName);
+            Assert.AreEqual(emailInputElement.Text, _userName);
+
+            var passwordInputElement = (HtmlPasswordInput)loginPage.GetElementByName("password");
+            Assert.IsNotNull(passwordInputElement, "password");
+
+            passwordInputElement.SetValueAttribute(_password);
+            Assert.AreEqual(passwordInputElement.Text, _password);
+
+            var loginForm = (HtmlForm)loginPage.GetElementsByTagName("form")[0];
+            Assert.IsNotNull(loginForm);
+
+            var loginFormText = loginForm.AsText();
+
+            StringAssert.Contains("sign in", loginFormText.toLowerCase());
+            StringAssert.Contains("connect with facebook", loginFormText.toLowerCase());
+            StringAssert.Contains("email", loginFormText.toLowerCase());
+            StringAssert.Contains("password", loginFormText.toLowerCase());
+
+            var loginFormButtons = loginForm.GetElementsByTagName("button");
+            Assert.IsNotNull(loginFormButtons);
+
+            var loginButton = (HtmlButton)loginFormButtons.First();
+            Assert.IsNotNull(loginButton);
+
+            var loginButtonText = loginButton.AsText();
+            StringAssert.Contains("sign in", loginButtonText.toLowerCase());
+
+            // ########################################
+            // # Uber consent page
+            // ########################################
+
+            var consentPage = (HtmlPage)loginButton.Click();
+            Assert.IsNotNull(consentPage);
+
+            IPage callbackPage;
+
+            // check if previously consented
+            if (!consentPage.Url.ToString().contains(string.Format("{0}?code=", _callbackUrl)))
             {
-                _webClient = new WebClient(BrowserVersion.FIREFOX_17);
-
-                _webClient.Options.ThrowExceptionOnScriptError = false;
-                _webClient.Options.JavaScriptEnabled = true;
-                _webClient.Options.RedirectEnabled = true;
-                _webClient.Options.ActiveXNative = false;
-                _webClient.Options.CssEnabled = true;
-
-                // ########################################
-                // # Uber login page
-                // ########################################
-
-                var loginPage = _webClient.GetHtmlPage(url);
-                Assert.IsNotNull(loginPage);
-
-                var loginPageText = loginPage.AsText();
-
-                StringAssert.Contains("sign in", loginPageText.toLowerCase());
-                StringAssert.Contains("connect with facebook", loginPageText.toLowerCase());
-                StringAssert.Contains("don't have an account", loginPageText.toLowerCase());
-                StringAssert.Contains("email", loginPageText.toLowerCase());
-                StringAssert.Contains("password", loginPageText.toLowerCase());
-
-                var signInSpan = (HtmlSpan)loginPage.GetElementsByTagName("span")[0];
-                Assert.AreEqual(signInSpan.AsText(), "Sign In");
-
-                var emailInputElement = (HtmlTextInput)loginPage.GetElementByName("email");
-                Assert.IsNotNull(emailInputElement, "email");
-
-                emailInputElement.SetValueAttribute(_userName);
-                Assert.AreEqual(emailInputElement.Text, _userName);
-
-                var passwordInputElement = (HtmlPasswordInput)loginPage.GetElementByName("password");
-                Assert.IsNotNull(passwordInputElement, "password");
-
-                passwordInputElement.SetValueAttribute(_password);
-                Assert.AreEqual(passwordInputElement.Text, _password);
-
-                var loginForm = (HtmlForm)loginPage.GetElementsByTagName("form")[0];
-                Assert.IsNotNull(loginForm);
-
-                var loginFormText = loginForm.AsText();
-
-                StringAssert.Contains("sign in", loginFormText.toLowerCase());
-                StringAssert.Contains("connect with facebook", loginFormText.toLowerCase());
-                StringAssert.Contains("email", loginFormText.toLowerCase());
-                StringAssert.Contains("password", loginFormText.toLowerCase());
-
-                var loginFormButtons = loginForm.GetElementsByTagName("button");
-                Assert.IsNotNull(loginFormButtons);
-
-                var loginButton = (HtmlButton)loginFormButtons.First();
-                Assert.IsNotNull(loginButton);
-
-                var loginButtonText = loginButton.AsText();
-                StringAssert.Contains("sign in", loginButtonText.toLowerCase());
-
-                loginButton.SetAttribute("type", "submit");
-                loginForm.AppendChild(loginButton);
-
-                // ########################################
-                // # Uber consent page
-                // ########################################
-
-                var consentPage = (HtmlPage)loginButton.Click();
-                Assert.IsNotNull(consentPage);
-
                 var consentPageUrl = consentPage.Url.ToString();
                 Assert.IsNotNullOrEmpty(consentPageUrl);
 
@@ -194,48 +191,30 @@ namespace Uber.FunctionalTests
                 Assert.IsNotNull(allowButton);
                 Assert.AreEqual("Allow", allowButton.AsText());
 
-                var callbackPage = allowButton.Click();
+                callbackPage = allowButton.Click();
                 Assert.IsNotNull(callbackPage);
-
-                // ########################################
-                // # Callback page
-                // ########################################
-
-                var page3Url = callbackPage.Url.ToString();
-                Assert.IsNotNullOrEmpty(page3Url);
-                StringAssert.Contains(string.Format("{0}?code=", _callbackUrl), page3Url);
-
-                var queryCollection = HttpUtility.ParseQueryString(page3Url);
-                var code = queryCollection[0];
-
-                var auth = new AuthenticationClient();
-                auth.WebServerAsync(_clientId, _clientSecret, _callbackUrl, code).Wait();
-
-                Assert.IsNotNull(auth);
-                Assert.IsNotNullOrEmpty(auth.AccessToken);
-
             }
-            finally
+            else
             {
-                //ResetWebClient();
+                callbackPage = consentPage;
             }
-        }
 
-        [TestFixtureTearDown]
-        public void Cleanup()
-        {
-            //ResetWebClient();
-        }
+            // ########################################
+            // # Callback page
+            // ########################################
+            
+            var page3Url = callbackPage.Url.ToString();
+            Assert.IsNotNullOrEmpty(page3Url);
+            StringAssert.Contains(string.Format("{0}?code=", _callbackUrl), page3Url);
 
-        private void ResetWebClient()
-        {
-            const string logoutUrl = "https://www.uber.com/logout";
+            var queryCollection = HttpUtility.ParseQueryString(page3Url);
+            var code = queryCollection[0];
 
-            var logOutPage = _webClient.GetHtmlPage(logoutUrl);
-            _webClient.CloseAllWindows();
-            _webClient.CookieManager.ClearCookies();
+            var auth = new AuthenticationClient();
+            auth.WebServerAsync(_clientId, _clientSecret, _callbackUrl, code).Wait();
 
-            _webClient = null;
+            Assert.IsNotNull(auth);
+            Assert.IsNotNullOrEmpty(auth.AccessToken);
         }
     }
 }
