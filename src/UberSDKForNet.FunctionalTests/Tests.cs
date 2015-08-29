@@ -1,26 +1,19 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
+using System.Runtime;
 using System.Threading.Tasks;
 using System.Web;
-using com.gargoylesoftware.htmlunit;
 using ikvm.extensions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NHtmlUnit.Html;
-using NUnit.Framework;
-using Uber.Models;
-
+using javax.tools;
 using NHtmlUnit;
 using NHtmlUnit.Html;
-using BrowserVersion = NHtmlUnit.BrowserVersion;
-using HttpMethod = System.Net.Http.HttpMethod;
+using NHtmlUnit.Javascript.Host;
+using Uber.Models;
 using WebClient = NHtmlUnit.WebClient;
+using NUnit.Framework;
+using Uber;
 
 namespace Uber.FunctionalTests
 {
@@ -30,7 +23,7 @@ namespace Uber.FunctionalTests
         private string _clientId = ConfigurationSettings.AppSettings["ClientId"];
         private string _clientSecret = ConfigurationSettings.AppSettings["ClientSecret"];
         private string _callbackUrl = ConfigurationSettings.AppSettings["CallbackUrl"];
-        private string _username = ConfigurationSettings.AppSettings["Username"];
+        private string _userName = ConfigurationSettings.AppSettings["Username"];
         private string _password = ConfigurationSettings.AppSettings["Password"];
         private string _serverKey = ConfigurationSettings.AppSettings["ServerKey"];
 
@@ -45,7 +38,7 @@ namespace Uber.FunctionalTests
                 _clientId = Environment.GetEnvironmentVariable("ClientId");
                 _clientSecret = Environment.GetEnvironmentVariable("ClientSecret");
                 _callbackUrl = Environment.GetEnvironmentVariable("CallbackUrl");
-                _username = Environment.GetEnvironmentVariable("Username");
+                _userName = Environment.GetEnvironmentVariable("Username");
                 _password = Environment.GetEnvironmentVariable("Password");
                 _serverKey = Environment.GetEnvironmentVariable("ServerKey");
             }
@@ -102,66 +95,96 @@ namespace Uber.FunctionalTests
             }
         }
 
+
         [Test]
-        public async Task Authentication_UserToken()
+        public void Asdf()
         {
-            const string url = "http://oauthintsvc.cloudapp.net/api/oauth";
+            var url = Common.FormatAuthorizeUrl(ResponseTypes.Code, _clientId, HttpUtility.UrlEncode(_callbackUrl));
+            const string expectedUrl = @"https://login.uber.com/oauth/authorize?response_type=code&client_id=qaWwsY5ij3k80LRwfaVaYxxZp6jYs6hV&redirect_uri=https%3a%2f%2fus.yahoo.com%2f";
 
-            using (var httpClient = new HttpClient())
-            {
-                var request = new HttpRequestMessage()
-                {
-                    RequestUri = new Uri(url),
-                    Method = HttpMethod.Get
-                };
+            Assert.AreEqual(url, expectedUrl);
 
-                var responseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
-                var response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var webClient = new WebClient(BrowserVersion.CHROME);
 
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    var jObject = JObject.Parse(response);
-                    var auth = JsonConvert.DeserializeObject<AuthToken>(jObject.ToString());
+            webClient.Options.ThrowExceptionOnScriptError = true;
 
-                    var accessToken = auth.access_token;
-                    var refreshToken = auth.refresh_token;
+            webClient.Options.JavaScriptEnabled = true;
+            webClient.Options.RedirectEnabled = true;
+            webClient.Options.ActiveXNative = true;
+            webClient.Options.CssEnabled = true; 
 
-                    Assert.IsNotNull(accessToken);
-                    Assert.IsNotNull(refreshToken);
-                }
-            }
+            // ########################################
+            // # Uber login page
+            // ########################################
+
+            var loginPage = webClient.GetHtmlPage(url);
+            Assert.IsNotNull(loginPage);
+
+            var loginPageText = loginPage.AsText();
+
+            StringAssert.Contains("sign in", loginPageText.toLowerCase());
+            StringAssert.Contains("connect with facebook", loginPageText.toLowerCase());
+            StringAssert.Contains("don't have an account", loginPageText.toLowerCase());
+            StringAssert.Contains("email", loginPageText.toLowerCase());
+            StringAssert.Contains("password", loginPageText.toLowerCase());
+
+            var signInSpan = (HtmlSpan)loginPage.GetElementsByTagName("span")[0];
+            Assert.AreEqual(signInSpan.AsText(), "Sign In");
+
+            var emailInputElement = (HtmlTextInput)loginPage.GetElementByName("email");
+            Assert.IsNotNull(emailInputElement, "email");
+
+            //emailInputElement.Type(_userName);
+            emailInputElement.SetValueAttribute(_userName);
+            Assert.AreEqual(emailInputElement.Text, _userName);
+
+            var passwordInputElement = (HtmlPasswordInput)loginPage.GetElementByName("password");
+            Assert.IsNotNull(passwordInputElement, "password");
+
+            //passwordInputElement.Type(_password);
+            passwordInputElement.SetValueAttribute(_password);
+            Assert.AreEqual(passwordInputElement.Text, _password);
+
+            var loginForm = (HtmlForm)loginPage.GetElementsByTagName("form")[0];
+            Assert.IsNotNull(loginForm);
+
+            var loginFormText = loginForm.AsText();
+
+            StringAssert.Contains("sign in", loginFormText.toLowerCase());
+            StringAssert.Contains("connect with facebook", loginFormText.toLowerCase());
+            StringAssert.Contains("email", loginFormText.toLowerCase());
+            StringAssert.Contains("password", loginFormText.toLowerCase());
+
+            var loginFormButtons = loginForm.GetElementsByTagName("button");
+            Assert.IsNotNull(loginFormButtons);
+
+            var loginButton = (HtmlButton)loginFormButtons.First();
+            Assert.IsNotNull(loginButton);
+
+            var loginButtonText = loginButton.AsText();
+            StringAssert.Contains("sign in", loginButtonText.toLowerCase());
+
+            loginButton.SetAttribute("type", "submit");
+            loginForm.AppendChild(loginButton);
+
+            // ########################################
+            // # Uber consent page
+            // ########################################
+
+            var consentPage = (HtmlPage)loginButton.Click();
+            Assert.IsNotNull(consentPage);
+
+            var consentPageUrl = consentPage.Url.ToString();
+            Assert.IsNotNullOrEmpty(consentPageUrl);
+
+            var consentPageText = consentPage.AsText();
+            StringAssert.Contains("access to your full name", consentPageText.toLowerCase());
+
+            //var notSignInSpan = (HtmlSpan)page2.GetElementsByTagName("span")[0];
+            //Assert.That(signInSpan.NodeValue, Is.Not.EqualTo("Sign In"));
+
+            //Assert.IsNotNull(page2, "page2");
         }
 
-        //[Test]
-        //public void Testing()
-        //{
-        //    const string arguments = "test.js";
-        //    const string expected = "test";
-
-        //    var p = new Process
-        //    {
-        //        StartInfo =
-        //        {
-        //            RedirectStandardError = true,
-        //            UseShellExecute = false,
-        //            RedirectStandardOutput = true,
-        //            CreateNoWindow = false,
-        //            FileName = @"phantomjs.exe",
-        //            Arguments = arguments
-        //        }
-        //    };
-
-        //    p.Start();
-        //    var error = p.StandardError.ReadToEnd();
-
-        //    if (!string.IsNullOrEmpty(error))
-        //        throw new Exception(error);
-
-        //    var actual = p.StandardOutput.ReadToEnd().Trim();
-
-        //    Assert.AreEqual(expected, actual);
-
-        //    p.WaitForExit();
-        //}
     }
 }
