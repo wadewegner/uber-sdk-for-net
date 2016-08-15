@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -61,6 +62,9 @@
     <Compile Include="UberClient.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Extensions">
+      <HintPath>..\..\..\..\Extensions\Extensions\bin\Debug\Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\portable-net45+wp80+win8+wpa81+dnxcore50\Newtonsoft.Json.dll</HintPath>
     </Reference>
