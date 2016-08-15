@@ -52,5 +52,15 @@ namespace Uber
             Uri tempValue;
             return Uri.TryCreate(url, UriKind.Absolute, out tempValue);
         }
+
+        public static string Join(List<string> arr, string concatenator = ",") {
+            string ret = "";
+            for (int i = 0; i < arr.Count; i++)
+            {
+                ret += arr[i];
+                if (i < arr.Count - 1) ret += concatenator;
+            }
+            return ret;
+        }
     }
 }
